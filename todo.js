@@ -32,21 +32,12 @@ const todoList = () => {
     // Format the To-Do list here, and return the output string as per the format given above.
     return list
       .map((item) => {
-        {
-          if (item.dueDate === formattedDate(new Date())) {
-            if (item.completed) {
-              return `[x] ${item.title}`;
-            } else {
-              return `[ ] ${item.title}`;
-            }
-          } else if (item.dueDate != formattedDate(new Date())) {
-            if (item.completed) {
-              return `[x] ${item.title} ${item.dueDate}`;
-            } else {
-              return `[ ] ${item.title} ${item.dueDate}`;
-            }
-          }
-        }
+        const completionStatus = item.completed ? "[x]" : "[ ]";
+        const displayedDate =
+          item.dueDate === new Date().toLocaleDateString("en-CA")
+            ? ""
+            : item.dueDate;
+        return `${completionStatus} ${item.title} ${displayedDate}`;
       })
       .join("\n");
   };
