@@ -2,9 +2,9 @@
 
 const todoList = require("../todo");
 
-const { all, markAsComplete, add } = todoList();
+const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
 
-describe("ToDo List Test Suite", () => {
+describe("Todo List Test Suite", () => {
   beforeAll(() => {
     add({
       title: "Complete WD201",
@@ -25,7 +25,7 @@ describe("ToDo List Test Suite", () => {
     });
   });
 
-  test("should add a todo item to the list", () => {
+  test("Should add a todo item to the list", () => {
     const len = all.length;
     add({
       title: "Complete WD201",
@@ -42,26 +42,21 @@ describe("ToDo List Test Suite", () => {
   });
 
   test("Should retrieve overdue items", () => {
-    const overdueCount = all.filter((item) => {
-      return new Date(item.dueDate) < new Date();
-    }).length;
+    const overdueCount = overdue().length;
+
     add({
       title: "New overdue item",
-      dueDate: new Date("2020-01-01"),
+      dueDate: new Date("2020-01-01").toLocaleDateString("en-CA"),
       completed: false,
     });
 
-    const newOverdueCount = all.filter((item) => {
-      return new Date(item.dueDate) < new Date();
-    }).length;
+    const newOverdueCount = overdue().length;
 
     expect(newOverdueCount).toBe(overdueCount + 1);
   });
 
   test("Should retrieve due today items", () => {
-    const dueTodayCount = all.filter((item) => {
-      return item.dueDate === new Date().toLocaleDateString("en-CA");
-    }).length;
+    const dueTodayCount = dueToday().length;
 
     add({
       title: "New due today item",
@@ -69,27 +64,21 @@ describe("ToDo List Test Suite", () => {
       completed: false,
     });
 
-    const newDueTodayCount = all.filter((item) => {
-      return item.dueDate === new Date().toLocaleDateString("en-CA");
-    }).length;
+    const newDueTodayCount = dueToday().length;
 
     expect(newDueTodayCount).toBe(dueTodayCount + 1);
   });
 
   test("Should retrieve due later items", () => {
-    const dueLaterCount = all.filter((item) => {
-      return item.dueDate > new Date().toLocaleDateString("en-CA");
-    }).length;
+    const dueLaterCount = dueLater().length;
 
     add({
       title: "New due later item",
-      dueDate: new Date("2023-12-31").toLocaleDateString("en-CA"),
+      dueDate: new Date("2099-12-31").toLocaleDateString("en-CA"),
       completed: false,
     });
 
-    const newDueLaterCount = all.filter((item) => {
-      return item.dueDate > new Date().toLocaleDateString("en-CA");
-    }).length;
+    const newDueLaterCount = dueLater().length;
 
     expect(newDueLaterCount).toBe(dueLaterCount + 1);
   });
